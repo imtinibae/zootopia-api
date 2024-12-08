@@ -1,4 +1,3 @@
-// src/animal/animals.services.ts
 
 import { Injectable } from '@nestjs/common';
 import { mysqlConnection } from '../config/mysql.config';
