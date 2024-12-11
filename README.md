@@ -57,12 +57,25 @@ FROM animal
 ORDER BY dateOfBirth ASC
 LIMIT 1;
 
+mysql> SELECT name, species, breed, dateOfBirth FROM animal ORDER BY dateOfBirth ASC LIMIT 1;
++-------+---------+---------------+-------------+
+| name  | species | breed         | dateOfBirth |
++-------+---------+---------------+-------------+
+| Rocky | Rabbit  | Flemish Giant | 2009-09-21  |
++-------+---------+---------------+-------------+
+1 row in set (0,01 sec)
+
 2. Quelle espèce est la mieux représentée ? (Le plus d’entités de cette espèce)
 SELECT species, COUNT(*) AS count
 FROM animal
 GROUP BY species
 ORDER BY count DESC
 LIMIT 1;
++---------+-------+
+| species | count |
++---------+-------+
+| Bird    |   179 |
++---------+-------+
 
 3. Qui possède le plus d'animaux ? 
 
@@ -71,6 +84,12 @@ FROM animal
 GROUP BY ownerId
 ORDER BY animal_count DESC
 LIMIT 1;
+
++---------+--------------+
+| ownerId | animal_count |
++---------+--------------+
+|      18 |            6 |
++---------+--------------+
 
 4. Qui possède le plus de chats ? 
 
@@ -81,6 +100,13 @@ GROUP BY ownerId
 ORDER BY cat_count DESC
 LIMIT 1;
 
++---------+-----------+
+| ownerId | cat_count |
++---------+-----------+
+|     268 |         4 |
++---------+-----------+
+
+
 5. Qui possède l'animal le plus lourd ? Comment s'appelle cet animal et quel est son poids ? 
 
 SELECT a.ownerId, a.name, a.weight
@@ -88,6 +114,11 @@ FROM animal a
 ORDER BY a.weight DESC
 LIMIT 1;
 
++---------+-------+--------+
+| ownerId | name  | weight |
++---------+-------+--------+
+|     209 | Chloe |  49937 |
++---------+-------+--------+
 6. Qui possède le groupe d’animaux le plus lourd ? Quel est le poids total de ce groupe d’animaux ?
 
 SELECT ownerId, SUM(weight) AS total_weight
@@ -95,5 +126,12 @@ FROM animal
 GROUP BY ownerId
 ORDER BY total_weight DESC
 LIMIT 1;
+
++---------+--------------+
+| ownerId | total_weight |
++---------+--------------+
+|      18 |       172152 |
++---------+--------------+
+
 
 Merci ! 
