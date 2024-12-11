@@ -1,99 +1,99 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Person & Animal API
+Bienvenue dans le projet Person & Animal API, une API CRUD développée avec NestJS et MySQL. Ce projet est conçu pour gérer des tables persons et animals en utilisant des bases de données relationnelles. Ce guide explique comment installer, configurer et utiliser l'API.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Fonctionnalités
+CRUD Complet : Gestion des objets persons et animals (Create, Read, Update, Delete).
+Connexion MySQL : Interfaçage avec une base de données MySQL.
+API REST : Routes pour interagir avec les données via Postman ou tout autre client HTTP.
+Prérequis
+Avant de commencer, assurez-vous d'avoir installé les outils suivants :
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Node.js (version 16 ou supérieure)
+MySQL (serveur de base de données)
+Postman (ou un autre client HTTP pour tester l'API)
+Git (pour cloner le dépôt)
+Installation
+1. Cloner le projet
+git clone https://github.com/imtinibae/zootopia-api.git
+cd zootopia-api
+2. Installer les dépendances
+npm install
+3. Configurer la base de données
+Créez une base de données MySQL nommée zootopia_db.
+Importez le fichier backup.sql inclus dans le projet pour créer les tables nécessaires :
 
-## Description
+mysql -u <username> -p zootopia_db < path/to/backup.sql
+Configurez les informations de connexion dans le fichier .env :
+env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=your_database_name
+4. Lancer le serveur
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+npm run start:dev
+Par défaut, l'API sera accessible sur http://localhost:4000/persons ou http://localhost:4000/animals .
 
-## Project setup
+Tester l'API
+Vous pouvez utiliser Postman pour interagir avec l'API.
 
-```bash
-$ npm install
-```
+Exemples de requêtes (via Postman)
+Créer une personne (POST /persons)
+Body (JSON) :
+{
+  "firstName": "Tom",
+  "lastName": "Holland",
+  "email": "tom.holland@example.com",
+  "phoneNumber": "1234567890"
+}
 
-## Compile and run the project
+Vous pouvez faire les requêtes SQL dans le terminal ;
 
-```bash
-# development
-$ npm run start
+1. Quel animal est le plus vieux ?
 
-# watch mode
-$ npm run start:dev
+SELECT name, species, breed, dateOfBirth
+FROM animal
+ORDER BY dateOfBirth ASC
+LIMIT 1;
 
-# production mode
-$ npm run start:prod
-```
+2. Quelle espèce est la mieux représentée ? (Le plus d’entités de cette espèce)
+SELECT species, COUNT(*) AS count
+FROM animal
+GROUP BY species
+ORDER BY count DESC
+LIMIT 1;
 
-## Run tests
+3. Qui possède le plus d'animaux ? 
 
-```bash
-# unit tests
-$ npm run test
+SELECT ownerId, COUNT(*) AS animal_count
+FROM animal
+GROUP BY ownerId
+ORDER BY animal_count DESC
+LIMIT 1;
 
-# e2e tests
-$ npm run test:e2e
+4. Qui possède le plus de chats ? 
 
-# test coverage
-$ npm run test:cov
-```
+SELECT ownerId, COUNT(*) AS cat_count
+FROM animal
+WHERE species = 'Cat'
+GROUP BY ownerId
+ORDER BY cat_count DESC
+LIMIT 1;
 
-## Deployment
+5. Qui possède l'animal le plus lourd ? Comment s'appelle cet animal et quel est son poids ? 
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+SELECT a.ownerId, a.name, a.weight
+FROM animal a
+ORDER BY a.weight DESC
+LIMIT 1;
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+6. Qui possède le groupe d’animaux le plus lourd ? Quel est le poids total de ce groupe d’animaux ?
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+SELECT ownerId, SUM(weight) AS total_weight
+FROM animal
+GROUP BY ownerId
+ORDER BY total_weight DESC
+LIMIT 1;
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Merci ! 
